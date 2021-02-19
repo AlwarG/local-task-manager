@@ -1,0 +1,10 @@
+.home {
+	padding: 56px 20px;
+}
+
+.notificationBanner {
+	z-index: 10;
+	text-align: center;
+	left: 40%;
+	position: fixed;
+}
