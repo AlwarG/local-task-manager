@@ -1,7 +1,7 @@
 {
   "name": "local-task-manager",
   "short_name": "local-task-manager",
-  "start_url": "/",
+  "start_url": "/local-task-manager",
   "display": "standalone",
   "orientation": "portrait",
   "background_color": "#fff",
