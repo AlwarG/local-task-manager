@@ -1,5 +1,5 @@
 # local-task-manager
-  The tool which can be used to manage your tasks locally. It is avaialable [here.](https://alwarg.github.io/local-task-manager/)
+  The tool which can be used to manage your tasks locally. It is available [here.](https://alwarg.github.io/local-task-manager/)
 #### Note
   It uses only the browser local storage instead of storing your data in some other places(thirdparty DB).
 ## CLI Commands
