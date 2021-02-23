@@ -120,13 +120,15 @@ class newTask extends Component {
     )
   }
 
-  componentDidUpdate({ date: prevDate }) {
+  componentDidMount = () => {
     let { date, editableIndex, isEdit }  = this.props;
-    if (isEdit && prevDate !== date && date) {
+
+    if (isEdit && date){
       let tasks = localStorage.getItem(date);
       tasks = (JSON.parse(tasks) || []);
       let { task, description } = tasks[editableIndex] || {};
-      if  (task) {
+
+      if (task) {
         this.setState({
           task,
           description,
@@ -137,14 +139,14 @@ class newTask extends Component {
   }
 
   render(props, state) {
-    let { canCloseTaskCreation, closeNewTask, isDirectCreate, isEdit } = props;
+    let { closeNewTask, isEdit } = props;
     return (
-      <div class={`modal ${canCloseTaskCreation ? "": "is-active"}`}>
+      <div class="modal is-active">
         <div class="modal-background"></div>
         <div class="modal-card">
           <header class="modal-card-head">
             <p class="modal-card-title">{isEdit ? 'Edit' : 'New'} Task</p>
-            {isDirectCreate ? '' : <button class="delete" aria-label="close" onclick={() => { closeNewTask() }}></button>}
+            <button class="delete" aria-label="close" onclick={() => { closeNewTask() }}></button>
           </header>
           <section class="modal-card-body">
             {this.errorBlock()}
@@ -169,7 +171,7 @@ class newTask extends Component {
           </section>
           <footer class="modal-card-foot">
             <button class="button is-link" onclick={() => { this.createTask(props) }}>{isEdit ? 'Edit' : 'Create'}</button>
-            {isDirectCreate ? '': <button class="button is-link is-light is-outlined" onclick={() => { closeNewTask() }}>Cancel</button>}
+            <button class="button is-link is-light is-outlined" onclick={() => { closeNewTask() }}>Cancel</button>
           </footer>
         </div>
       </div>

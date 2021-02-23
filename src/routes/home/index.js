@@ -11,7 +11,8 @@ class Home extends Component {
 		isEdit: false,
 		editableIndex: '',
 		task: {},
-		date: ''
+		date: '',
+		isAsc: true
   }
 
 	monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
@@ -59,15 +60,23 @@ class Home extends Component {
 		});
 	}
 
-	render(props, { isFinishedSelected, canCloseTaskCreation, searchText, isEdit, editableIndex, date }) {
+	changeSortOrder = (isAsc) => {
+		console.log('kdkd', isAsc)
+		this.setState({ isAsc });
+	}
+
+	render(props, { isFinishedSelected, canCloseTaskCreation, searchText, isEdit, editableIndex, date, isAsc }) {
 		if (typeof window !== "undefined") {
 			let { localStorage } = window;
 			let dates = localStorage.getItem('dates');
-			if (!dates) {
-				return (<div><NewTask canCloseTaskCreation={false} closeNewTask={this.closeNewTask} isDirectCreate={true} /></div>);
-			}
 			dates = JSON.parse(dates);
 			dates = dates || [];
+			if	(isAsc) {
+				dates = dates.sort((a, b) => new Date(a) - new Date(b));
+			} else {
+				dates = dates.sort((a, b) => new Date(b) - new Date(a));
+			}
+			
 			let formattedDates = this.getFormattedDates(dates);
 
 			return  (
@@ -86,40 +95,57 @@ class Home extends Component {
 								<li class={isFinishedSelected ? '' : 'is-active'} onclick={() => this.switchStates(false)}><a>Unfinished</a></li>
 								<li class={isFinishedSelected ? 'is-active': ''} onclick={() => this.switchStates(true)}><a>Finished</a></li>
 							</ul>
+							{isAsc ?
+							<svg xmlns="http://www.w3.org/2000/svg" width="48px" height="48px" viewBox="0 0 24 24" stroke="#2329D6" stroke-width="1" stroke-linecap="square" stroke-linejoin="miter" fill="none" color="#2329D6" class={`cursor-pointer ${style.sortIcon}`} onclick={() => this.changeSortOrder(false)}>
+								<path d="M11 9H17"/>
+								<path d="M11 5H19"/>
+								<path d="M11 13H15"/>
+								<path d="M10 17L7 20L4 17"/>
+								<path d="M7 5V19"/>
+							</svg>
+							:
+							<svg xmlns="http://www.w3.org/2000/svg" width="48px" height="48px" viewBox="0 0 24 24" stroke="#2329D6" stroke-width="1" stroke-linecap="square" stroke-linejoin="miter" fill="none" color="#2329D6" class={`cursor-pointer ${style.sortIcon}`} onclick={() => this.changeSortOrder(true)}>
+								<path d="M11 16H17"/>
+								<path d="M11 20H19"/>
+								<path d="M11 12H15"/>
+								<path d="M4 8L7 5L10 8"/>
+								<path d="M7 20L7 6"/>
+							</svg>
+							}
 						</div>
 						<TaskList dates={dates} formattedDates={formattedDates} isFinishedSelected={isFinishedSelected} searchText={searchText} editTask={this.editTask} />
-						<NewTask canCloseTaskCreation={canCloseTaskCreation} closeNewTask={this.closeNewTask} isEdit={isEdit} editableIndex={editableIndex} date={date} />
+						{canCloseTaskCreation ? "" : <NewTask closeNewTask={this.closeNewTask} isEdit={isEdit} editableIndex={editableIndex} date={date} />}
 					</div>
 			);
 		}
 	}
-	componentDidMount() {
-		let { localStorage } = window;
-		let dates = localStorage.getItem('dates');
-		if (dates) {
-			// Removing outDated dates
-			let todayDate = new Date();
-			dates = JSON.parse(dates) || [];
+	// componentDidMount() {
+	// 	let { localStorage } = window;
+	// 	let dates = localStorage.getItem('dates');
+	// 	if (dates) {
+	// 		// Removing outDated dates
+	// 		let todayDate = new Date();
+	// 		dates = JSON.parse(dates) || [];
 	
-			let resDates = dates.filter((date) => {
-				let dateObj = new Date(date);
-				const diffTime = Math.abs(dateObj - todayDate);
-				const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-				return diffDays < 30;
-			});
-			localStorage.setItem('dates', JSON.stringify(resDates));
+	// 		let resDates = dates.filter((date) => {
+	// 			let dateObj = new Date(date);
+	// 			const diffTime = Math.abs(dateObj - todayDate);
+	// 			const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+	// 			return diffDays < 30;
+	// 		});
+	// 		localStorage.setItem('dates', JSON.stringify(resDates));
 
-			let outDatedDates = dates.filter((date) => {
-				let dateObj = new Date(date);
-				const diffTime = Math.abs(dateObj - todayDate);
-				const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-				return diffDays > 30;
-			});
-			outDatedDates.forEach((date) => {
-				localStorage.removeItem(date);
-			});
-		}
-	}
+	// 		let outDatedDates = dates.filter((date) => {
+	// 			let dateObj = new Date(date);
+	// 			const diffTime = Math.abs(dateObj - todayDate);
+	// 			const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+	// 			return diffDays > 30;
+	// 		});
+	// 		outDatedDates.forEach((date) => {
+	// 			localStorage.removeItem(date);
+	// 		});
+	// 	}
+	// }
 }
 
 export default Home;

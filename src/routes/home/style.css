@@ -8,3 +8,7 @@
 	left: 40%;
 	position: fixed;
 }
+
+.sortIcon:hover {
+	background-color: #eef3fc;
+}
